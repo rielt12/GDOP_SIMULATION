@@ -1,4 +1,5 @@
 clear all
+close all
 % Goal of simulation is to take constellation TLEs and:
 % 1) simulate doppler shifts from them
 % 2) calculate a navigation fix from the shifts
@@ -9,6 +10,7 @@ clear all
 R_e=6378.1; % Equatorial radius
 f=0.00335; % Oblatness of the earth
 lambda = 3e8/1626.5e6; % wavelength iridium
+lambda = 3e8/ 11.325
 
 % We first propagate a TLE
 
@@ -58,8 +60,9 @@ MN=0;
 S=0;
 JD_init= jday(Y,M,D,HR,MN,S);
 
-end_t =5;
+end_t =3600;
 for t = 1:end_t
+    t
 JD_prop_to= (JD_init*24*60*60 + t)/(24*60*60);
 for n = 1:length(fNames)
     elapsedtime=(JD_prop_to-satrec.(fNames{n}).jdsatepoch)*24*60; % minutes
@@ -93,7 +96,7 @@ for n = 1:length(fNames)
     legend(fNames{n})
     xlabel('time (seconds)')
     ylabel('dopper shift')
-    
+    title('doppler shift vs. time')
     
     figure(n+1000)
     plot(1:end_t, satrec.(fNames{n}).elevation)
@@ -103,4 +106,12 @@ for n = 1:length(fNames)
     title('elevation vs. time')
 end
 
+save('iridium_ephemeris_altitude')
 
+FolderName = tempdir;   % Your destination folder
+FigList = findobj(allchild(0), 'flat', 'Type', 'figure');
+for iFig = 1:length(FigList)
+  FigHandle = FigList(iFig);
+  FigName   = get(FigHandle, 'Name');
+  savefig(FigHandle, fullfile(FolderName, FigName, '.fig'));
+end

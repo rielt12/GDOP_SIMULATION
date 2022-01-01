@@ -10,6 +10,7 @@ close all
 R_e=6378.1; % Equatorial radius
 f=0.00335; % Oblatness of the earth
 lambda = 3e8/1626.5e6; % wavelength iridium
+lambda = 3e8/11.325e9; % wavelength starlink
 
 % We first propagate a TLE
 
@@ -25,11 +26,11 @@ location = [latitude,-1*longitude,H];
 
 
 % get TLE info
-fid = fopen("iridium_set.TLE");
+fid = fopen("starlink_set.TLE");
 n = linecount(fid);
 fclose(fid);
 
-fopen("iridium_set.TLE");
+fopen("starlink_set.TLE");
 for i=1:3:n-3
 tline = fgetl(fid);
 longstr1=char(tline);
@@ -39,6 +40,9 @@ tline=fgetl(fid);
 longstr3=char(tline);
 sat_name = convertCharsToStrings(longstr1);
 sat_name = strrep(sat_name, ' ', '');
+sat_name = strrep(sat_name, '-', '');
+sat_name = strrep(sat_name, '(', '');
+sat_name = strrep(sat_name, ')', '');
 satrec.(sat_name)= twoline2rvMOD(longstr2,longstr3);
 end
 
@@ -51,15 +55,15 @@ end
 % we start on the 26th of december 2021 at 0:00 and propagate for 24 hours
 % minute by minute.
 
-Y=2021; 
-M=12; 
-D=26; 
-HR=0; 
-MN=0; 
-S=0;
+Y=2022; 
+M=01; 
+D=01; 
+HR=16; 
+MN=01; 
+S=03;
 JD_init= jday(Y,M,D,HR,MN,S);
 
-end_t =3600;
+end_t =10;
 for t = 1:end_t
     t
 JD_prop_to= (JD_init*24*60*60 + t)/(24*60*60);
@@ -88,29 +92,22 @@ end
 
 end
 
+% 
+% for n = 1:length(fNames)
+%     figure(n)
+%     plot(1:end_t, satrec.(fNames{n}).doppler_shift)
+%     legend(fNames{n})
+%     xlabel('time (seconds)')
+%     ylabel('dopper shift')
+%     title('doppler shift vs. time')
+%     
+%     figure(n+1000)
+%     plot(1:end_t, satrec.(fNames{n}).elevation)
+%     legend(fNames{n})
+%     xlabel('time (seconds)')
+%     ylabel('elevation')
+%     title('elevation vs. time')
+% end
 
-for n = 1:length(fNames)
-    figure(n)
-    plot(1:end_t, satrec.(fNames{n}).doppler_shift)
-    legend(fNames{n})
-    xlabel('time (seconds)')
-    ylabel('dopper shift')
-    title('doppler shift vs. time')
-    
-    figure(n+1000)
-    plot(1:end_t, satrec.(fNames{n}).elevation)
-    legend(fNames{n})
-    xlabel('time (seconds)')
-    ylabel('elevation')
-    title('elevation vs. time')
-end
+save('starlink_ephemeris_altitude')
 
-save('ephemeris_altitude')
-
-FolderName = tempdir;   % Your destination folder
-FigList = findobj(allchild(0), 'flat', 'Type', 'figure');
-for iFig = 1:length(FigList)
-  FigHandle = FigList(iFig);
-  FigName   = get(FigHandle, 'Name');
-  savefig(FigHandle, fullfile(FolderName, FigName, '.fig'));
-end

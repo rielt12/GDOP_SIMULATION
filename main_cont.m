@@ -1,27 +1,43 @@
 clear all
 close all
-load('ephemeris_altitude.mat')
+load('starlink_ephemeris_altitude.mat')
 
-% find time when at lest 8 elevations are greater than zero.
+% We use heavens above to find all the satellites visible and we collect
+% the doppler shift
+% We collect the relevant shifts
 
-el_mask = 0;
-for n = 1:length(fNames)
-    i = 0;
-    satrec.(fNames{n}).relevant_time=[];
-    for t = 1:end_t
-    if(satrec.(fNames{n}).elevation(t,1)  >el_mask)
-        i=i+1;
-      satrec.(fNames{n}).relevant_time(i,1) = t;
-    end
-    end
+
+
+shift(1,1) = satrec.STARLINK1339.doppler_shift(end_t,1);
+shift(2,1) = satrec.STARLINK2170.doppler_shift(end_t,1);
+shift(3,1) = satrec.STARLINK2712.doppler_shift(end_t,1);
+shift(4,1) = satrec.STARLINK2549.doppler_shift(end_t,1);
+shift(5,1) = satrec.STARLINK1488.doppler_shift(end_t,1);
+shift(6,1) = satrec.STARLINK1578.doppler_shift(end_t,1);
+shift(7,1) = satrec.STARLINK2722.doppler_shift(end_t,1);
+shift(8,1) = satrec.STARLINK1554.doppler_shift(end_t,1);
+shift(9,1) = satrec.STARLINK2129.doppler_shift(end_t,1);
+
+elevation(1,1) = satrec.STARLINK1339.elevation(end_t,1);
+elevation(2,1) = satrec.STARLINK2170.elevation(end_t,1);
+elevation(3,1) = satrec.STARLINK2712.elevation(end_t,1);
+elevation(4,1) = satrec.STARLINK2549.elevation(end_t,1);
+elevation(5,1) = satrec.STARLINK1488.elevation(end_t,1);
+elevation(6,1) = satrec.STARLINK1578.elevation(end_t,1);
+elevation(7,1) = satrec.STARLINK2722.elevation(end_t,1);
+elevation(8,1) = satrec.STARLINK1554.elevation(end_t,1);
+elevation(9,1) = satrec.STARLINK2129.elevation(end_t,1);
+
+% symbolic check that elevation is positive
+for i=1:9
+    i
+if(elevation(i,1) <0 )
+display("there is a problem")
+end
 end
 
-combos = nchoosek(1:length(fNames),8);
 
-Rel_Times = {};
-for n = 1:length(combos(1e6,:))
- Rel_Times(n,:) = {satrec.(fNames{combos(1,n)}).relevant_time};  
-end
+% Goal to calculate GDOP and position
 
-mintersect(Rel_Times{:})
-%mintersect(satrec.(fNames{1}).relevant_time,satrec.(fNames{2}).relevant_time, satrec.(fNames{3}).relevant_time,satrec.(fNames{4}).relevant_time, satrec.(fNames{5}).relevant_time, satrec.(fNames{6}).relevant_time, satrec.(fNames{7}).relevant_time, satrec.(fNames{8}).relevant_time)
+
+

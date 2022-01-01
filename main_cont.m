@@ -28,6 +28,27 @@ elevation(7,1) = satrec.STARLINK2722.elevation(end_t,1);
 elevation(8,1) = satrec.STARLINK1554.elevation(end_t,1);
 elevation(9,1) = satrec.STARLINK2129.elevation(end_t,1);
 
+pos(1,:) = satrec.STARLINK1339.pos(end_t,:);
+pos(2,:) = satrec.STARLINK2170.pos(end_t,:);
+pos(3,:) = satrec.STARLINK2712.pos(end_t,:);
+pos(4,:) = satrec.STARLINK2549.pos(end_t,:);
+pos(5,:) = satrec.STARLINK1488.pos(end_t,:);
+pos(6,:) = satrec.STARLINK1578.pos(end_t,:);
+pos(7,:) = satrec.STARLINK2722.pos(end_t,:);
+pos(8,:) = satrec.STARLINK1554.pos(end_t,:);
+pos(9,:) = satrec.STARLINK2129.pos(end_t,:);
+
+
+vel(1,:) = satrec.STARLINK1339.vel(end_t,:);
+vel(2,:) = satrec.STARLINK2170.vel(end_t,:);
+vel(3,:) = satrec.STARLINK2712.vel(end_t,:);
+vel(4,:) = satrec.STARLINK2549.vel(end_t,:);
+vel(5,:) = satrec.STARLINK1488.vel(end_t,:);
+vel(6,:) = satrec.STARLINK1578.vel(end_t,:);
+vel(7,:) = satrec.STARLINK2722.vel(end_t,:);
+vel(8,:) = satrec.STARLINK1554.vel(end_t,:);
+vel(9,:) = satrec.STARLINK2129.vel(end_t,:);
+
 % symbolic check that elevation is positive
 for i=1:9
     i

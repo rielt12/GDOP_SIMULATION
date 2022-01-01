@@ -75,8 +75,14 @@ for n = 1:length(fNames)
     [h,m,s] = hms(JD_prop_to_dt);
     time  =[y,mo,d,h,m,s];
     %elevation calc
-    aer = eci2aer(r.*1000,time, location) ;
+    aer = eci2aer(r.*1000,time, location); 
     satrec.(fNames{n}).elevation(t,1) = aer(1,2);
+    
+    %convert to ecef
+   [r_ecef,v_ecef]=eci2ecef(r',v',time(1),time(2),time(3),time(4),time(5),time(6));
+    %[az,elev,slantRange]  =
+    %ecef2aer(r_ecef(1).*1000,r_ecef(2).*1000,r_ecef(3).*1000,location(1), location(2), location(3), wgs84Ellipsoid, 'degrees');
+
     
     % doppler shift calc
     [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),(2*pi)-(longitude*(pi/180)),H); % this function takes east longitude. change if need be.
@@ -84,9 +90,19 @@ for n = 1:length(fNames)
     eci_ref=ECEFtoECI(JD_prop_to,ecef_ref); % reference (ground station) location in ECI
     eci_ref=transpose(eci_ref);
     r1_topo=r-eci_ref; % topocentric location of satellite in ECI
+    r1_topo_ecef=r_ecef-ecef_ref; % topocentric location of satellite in ECEF
+   
     % we project the eci velocity onto the eci position
     v_c = dot(v,r1_topo./norm(r1_topo));% closing velocity
-    satrec.(fNames{n}).doppler_shift(t,1) = -norm(v_c)/lambda;
+    
+    % we project the ecef velocity onto the ecef position
+    v_c_ecef =dot(v_ecef, r1_topo_ecef./norm(r1_topo_ecef));
+   
+    satrec.(fNames{n}).doppler_shift(t,1) = -norm(v_c_ecef)/lambda;
+    
+    satrec.(fNames{n}).pos(t,:) = r_ecef';
+    satrec.(fNames{n}).vel(t,:) = v_ecef';
+    
         
 end
 

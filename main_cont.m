@@ -59,6 +59,6 @@ end
 
 
 % Goal to calculate GDOP and position
-
+t_rec = end_t;
 
 

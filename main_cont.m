@@ -1,6 +1,6 @@
-clear all
-close all
+
 load('starlink_ephemeris_altitude.mat')
+sgp4(satrec.STARLINK1035,200)
 
 % We use heavens above to find all the satellites visible and we collect
 % the doppler shift
@@ -49,6 +49,18 @@ vel(7,:) = satrec.STARLINK2722.vel(end_t,:);
 vel(8,:) = satrec.STARLINK1554.vel(end_t,:);
 vel(9,:) = satrec.STARLINK2129.vel(end_t,:);
 
+ephemeris(1,1) = satrec.STARLINK1339;
+ephemeris(2,1) = satrec.STARLINK2170;
+ephemeris(3,1) = satrec.STARLINK2712;
+ephemeris(4,1) = satrec.STARLINK2549;
+ephemeris(5,1) = satrec.STARLINK1488;
+ephemeris(6,1) = satrec.STARLINK1578;
+ephemeris(7,1) = satrec.STARLINK2722;
+ephemeris(8,1) = satrec.STARLINK1554;
+ephemeris(9,1) = satrec.STARLINK2129;
+
+
+
 % symbolic check that elevation is positive
 for i=1:9
     i
@@ -59,6 +71,10 @@ end
 
 
 % Goal to calculate GDOP and position
-t_rec = end_t;
+current_time = elapsedtime;
 
 
+[state ~] = doppler_shift_positioning(shift, pos, lambda, current_time, ephemeris, JD_prop_to);
+
+
+state

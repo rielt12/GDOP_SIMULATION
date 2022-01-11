@@ -22,7 +22,7 @@
 % 
 % Michael Kleder, July 2005
 
-function [x,y,z]=lla2ecef(lat,lon,alt)
+function [x,y,z]=lla2ecef_AB(lat,lon,alt)
 
 % WGS84 ellipsoid constants:
 a = 6378137;

@@ -11,8 +11,9 @@ A(1,3)=AN3;
 A(1,4)=AN4;
 
 
-A(1,5:7) = 0;
-A(1,8) = 0;
+[AN5,AN6,AN7] = del_ADR_del_v(r, del_R,t_R, v, del_R_rate, pos,lambda, ephemeris, JD_prop_to);
+A(1,5:7) = [AN5,AN6,AN7];
+A(1,8) = del_ADR_del_r_dot(r, del_R,t_R, v, del_R_rate, pos,lambda, ephemeris, JD_prop_to);
 
 
 

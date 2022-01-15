@@ -63,7 +63,6 @@ ephemeris(9,1) = satrec.STARLINK2129;
 
 % symbolic check that elevation is positive
 for i=1:9
-    i
 if(elevation(i,1) <0 )
 display("there is a problem")
 end

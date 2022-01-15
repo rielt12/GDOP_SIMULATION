@@ -42,7 +42,7 @@ while (abs(norm(error))>0.000000001)
   j=j+1
  delta_y =inv(A'*A)*A'*error';
 
- y_i=y_i+delta_y;
+ y_i=y_i+0.5*delta_y;
  rec_pos =y_i(1:3,1);
  rec_clock_bias =y_i(4,1);
  rec_vel =y_i(5:7,1);

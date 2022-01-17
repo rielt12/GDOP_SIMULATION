@@ -32,9 +32,9 @@ R  =zeros(length(shift),length(shift));
 %first compute error terms
 for i=1:length(shift)
     elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
-    del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i,:)',lambda,ephemeris(i,1), JD_prop_to);
+    del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
     R(i,i) = lambda*0.01;
-    error(i,1)= del_ADR(i)-shift(i)
+    error(i)= del_ADR(i)-shift(i)
 end
 C = {'rec_pos', 'rec_clock_bias', 'elapsedtime', 'rec_vel','rec_clock_bias_rate', 'pos', 'lambda', 'ephemeris', 'JD_prop_to'};   % Creating the list of variables
 save('last_sat_NLS.mat', C{:})

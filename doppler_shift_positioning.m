@@ -33,8 +33,8 @@ R  =zeros(length(shift),length(shift));
 for i=1:length(shift)
     elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
     del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i,:)',lambda,ephemeris(i,1), JD_prop_to);
-    R(i,i) = lambda*0.01;
-    error(i,1)= del_ADR(i)-shift(i)
+    R(i,i) = (0.01)^2;
+    error(i)= lambda*((shift(i)-del_ADR(i)));
 end
 C = {'rec_pos', 'rec_clock_bias', 'elapsedtime', 'rec_vel','rec_clock_bias_rate', 'pos', 'lambda', 'ephemeris', 'JD_prop_to'};   % Creating the list of variables
 save('last_sat_NLS.mat', C{:})
@@ -44,52 +44,61 @@ save('last_sat_NLS.mat', C{:})
 for i=1:length(shift)
 A(i,:) = Jacobian_Psiaki_Row(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
 end
+size(A'*A)
+rank(A'*A)
+[v,d]=eig(A'*A)
+%chol(A'*A)
 
+
+
+sqrt(A(1,1)^2+A(1,2)^2+A(1,3)^2)
 
 
 iter = 0;
 Error(iter+1,1) = abs(norm(error));
 
 
-% while(abs(norm(error)) >0.000000001)
-%  
-% abs(norm(error))
-% iter = iter+1
-% tau =1;
-% delta_y =inv(A'*A)*A'*error';
-% %delta_y = lschol(A,error');
-% %delta_y = lsqr(A,error');
-% 
-% 
-% y_i=y_i+tau*delta_y;
-% rec_pos =y_i(1:3,1);
-% rec_clock_bias =y_i(4,1);
-% rec_vel =y_i(5:7,1);
-% rec_clock_bias_rate= y_i(8,1);
-% 
-% 
-% t_R =current_time; % minutes
-% 
-% 
-% R  =zeros(length(shift),length(shift));
-% %first compute error terms
-%  for i=1:length(shift)
-%     elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
-%     del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
-%     R(i,i) = lambda*0.01;
-%     error(i)= del_ADR(i)- shift(i);
-%  end
-%  Error(iter+1,1) = abs(norm(error));
-% 
-%  
-% for i=1:length(shift)
-%  A(i,:) = Jacobian_Psiaki_Row(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
-%  end
-%  
-% end
-% 
-% 
-% 
+while(abs(norm(error)) >0.001  && iter < 200)
+ 
+abs(norm(error))
+iter = iter+1
+tau =1;
+delta_y =pinv(A'*R*A)*A'*R*error';
+%delta_y = lschol(A'*R*A,A'*R*error');
+delta_y = lsqr(A'*R*A,A'*R*error');
+%delta_y = zeros(8,1);
+
+y_i = y_i + tau*delta_y;
+
+
+rec_pos =y_i(1:3,1);
+rec_clock_bias =y_i(4,1);
+rec_vel =y_i(5:7,1);
+rec_clock_bias_rate= y_i(8,1);
+
+
+t_R =current_time; % minutes
+
+
+R  =zeros(length(shift),length(shift));
+%first compute error terms
+ for i=1:length(shift)
+    elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
+    del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
+    R(i,i) = (0.01)^2;
+    error(i)= lambda*((shift(i)-del_ADR(i)));
+ end
+ Error(iter+1,1) = abs(norm(error));
+
+ 
+for i=1:length(shift)
+ A(i,:) = Jacobian_Psiaki_Row(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
+end
+ 
+end
+
+
+
 
 rec_GDOP = 0;
 

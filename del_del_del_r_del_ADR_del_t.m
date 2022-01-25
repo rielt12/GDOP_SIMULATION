@@ -16,8 +16,8 @@ time  =[y,mo,d,h,m,s];
 
 vec = r-A*r_prop_ecef;
 
-% numerical derivative : perturb del_r by 0.01 and propagate and take the difference divided by 0.01
-[~, r_prop_eci_pert, v_prop_eci_pert] = sgp4(ephemeris,t_R-(del_R+0.01)/60-t_prop/60);
+% numerical derivative : perturb del_r by 1e-6 and propagate and take the difference divided by 0.01
+[~, r_prop_eci_pert, v_prop_eci_pert] = sgp4(ephemeris,t_R-(del_R+1e-6)/60-t_prop/60);
 r_prop_eci_pert = r_prop_eci_pert.*1000;
 v_prop_eci_pert = v_prop_eci_pert.*1000; % convert to meters
 
@@ -28,7 +28,7 @@ JD_prop_to_dt =datetime(JD_prop_to-t_R*(1/60)*(1/24)-(del_R+0.01)*(1/3600)*(1/24
 time  =[y,mo,d,h,m,s];
 [r_prop_ecef_pert,~]=eci2ecef(r_prop_eci_pert',v_prop_eci_pert',time(1),time(2),time(3),time(4),time(5),time(6));
 
-derivative = (r_prop_ecef_pert-r_prop_ecef)./0.01;
+derivative = (r_prop_ecef_pert-r_prop_ecef)./1e-6;
 
 dot_prod = dot(vec,derivative);
 

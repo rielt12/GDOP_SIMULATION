@@ -108,7 +108,7 @@ for n = 1:length(fNames)
 
     % equation (7) attempt
     % we assume a non stationary reciever 
-    v_rec = [10;0;0];
+    v_rec = [0;0;0];
     % we simulate 0 clock bias in the satellites
     del_j = 0; % seconds
     % we simulate 0 clock bias rates in the satellites

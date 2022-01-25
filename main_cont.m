@@ -74,6 +74,8 @@ current_time = elapsedtime;
 
 [state ~, Error] = doppler_shift_positioning(shift, pos, lambda, current_time, ephemeris, JD_prop_to);
 
+state
+
 figure(1000)
 plot(Error)
 xlabel('iterations')

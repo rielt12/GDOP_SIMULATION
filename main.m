@@ -108,7 +108,7 @@ for n = 1:length(fNames)
 
     % equation (7) attempt
     % we assume a non stationary reciever 
-    v_rec = [0;0;0];
+    v_rec = [10;0;0];
     % we simulate 0 clock bias in the satellites
     del_j = 0; % seconds
     % we simulate 0 clock bias rates in the satellites
@@ -135,16 +135,9 @@ for n = 1:length(fNames)
     
     
     % equation 10 attempt
-    satrec.(fNames{n}).doppler_shift(t,1)= acculumulated_delta_range_derivative(ecef_ref, del_r,elapsedtime, v_rec, del_r_dot, r_ecef,lambda,satrec.(fNames{n}), JD_prop_to)+rand(1,1);
+    satrec.(fNames{n}).doppler_shift(t,1)= acculumulated_delta_range_derivative(ecef_ref, del_r,elapsedtime, v_rec, del_r_dot, r_ecef,lambda,satrec.(fNames{n}), JD_prop_to);
     satrec.(fNames{n}).pos(t,:) = r_ecef'; %meters
     satrec.(fNames{n}).vel(t,:) = v_ecef'; % meters
-    
-    if(strcmp(fNames(n),'STARLINK1554'))
-    disp('entered')
-    eph = satrec.STARLINK1554;
-    C = {'ecef_ref', 'del_r', 'elapsedtime', 'v_rec','del_r_dot', 'r_ecef', 'lambda','eph', 'JD_prop_to'};   % Creating the list of variables
-    save('last_sat_sim.mat', C{:})
-    end
 
 
 

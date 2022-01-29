@@ -72,7 +72,7 @@ end
 % Goal to calculate GDOP and position
 current_time = elapsedtime;
 
-[state ~, Error, delta_y_0] = doppler_shift_positioning(shift, pos, lambda, current_time, ephemeris, JD_prop_to);
+[state ~, Error, delta_y_0,error_0,A_0] = doppler_shift_positioning(shift, pos, lambda, current_time, ephemeris, JD_prop_to);
 
 
 figure(1000)

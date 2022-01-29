@@ -22,7 +22,11 @@ E=[E1;E2;E3;E4];
 i=0;
 while (abs(norm(E))>0.000000001)
  i=i+1;
-  delta_y=inv(A)*E;
+  %delta_y=inv(A)*E;
+  %delta_y = pinv(A'*A)*A'*E
+  %delta_y = lsqr((A'*A),A'*E)
+  delta_y = lschol(A'*A,A'*E);
+
   y_i=y_i+delta_y;
 
 E1=R1-sqrt((r1(1,1)-y_i(1,1))^2+(r1(2,1)-y_i(2,1))^2+(r1(3,1)-y_i(3,1))^2)+r1(4,1)-y_i(4,1);

@@ -135,7 +135,7 @@ for n = 1:length(fNames)
     
     
     % equation 10 attempt
-    satrec.(fNames{n}).doppler_shift(t,1)= acculumulated_delta_range_derivative(ecef_ref, del_r,elapsedtime, v_rec, del_r_dot, r_ecef,lambda,satrec.(fNames{n}), JD_prop_to);
+    satrec.(fNames{n}).doppler_shift(t,1)= (acculumulated_delta_range_derivative(ecef_ref, del_r,elapsedtime, v_rec, del_r_dot, r_ecef,lambda,satrec.(fNames{n}), JD_prop_to));
     satrec.(fNames{n}).pos(t,:) = r_ecef'; %meters
     satrec.(fNames{n}).vel(t,:) = v_ecef'; % meters
 

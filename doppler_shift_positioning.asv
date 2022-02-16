@@ -1,6 +1,6 @@
 function [state rec_GDOP, Error, delta_y_0,error_0,A_0] = doppler_shift_positioning(shift, pos, lambda, current_time, ephemeris, JD_prop_to)
 
-max_iter = 1500;
+max_iter = 1400;
 
 % inputs
 % shifts are observed doppler shifts
@@ -17,7 +17,7 @@ H=0;
 %-4845789.2537157507613301277160645
 %3989288.0202742042019963264465332
 [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),(2*pi)-(longitude*(pi/180)),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  x+20e3;
+rec_pos(1,1) =  x+100;
 rec_pos(2,1) =  y;
 rec_pos(3,1) =  z;
 %rec_pos(1,1) = 0;
@@ -64,31 +64,34 @@ delta_y_0 =inv((A'*A))*A'*error';
 
 
 
-iter = 1;
-Error(iter,1) = norm(error);
+iter = 0;
+Error(iter+1,1) = norm(error)
 
-while(norm(error) >1e-8 && iter < max_iter)
-iter  
+while(norm(error) >1e-6 && iter < max_iter)
+ 
+
+
+iter = iter+1
 norm(error)
 
 %delta_y =pinv((A'*R*A))*A'*R*error';
 %delta_y = lschol(A'*R*A,A'*R*error');
 %delta_y = (A'*R*A)\A'*R*error';
 %delta_y = lsqr((A'*A),A'*error');
-delta_y =  inv(A'*A)*A'*error';
+delta_y =  pinv(A)*error';
 
 
 
 
-tau = 1;
+tau =find_step_size(y_i,A,shift, pos, lambda, current_time, ephemeris, JD_prop_to, Error,iter, error,R, delta_y);
+tau
 
 
 
 
 
-y_i(1,1) = y_i(1,1)+tau*delta_y(1,1);
-%y_i(2,1) = y_i(2,1)+tau*delta_y(2,1);
 
+y_i = y_i+tau*delta_y;
 
 
 rec_pos =y_i(1:3,1);
@@ -118,8 +121,7 @@ end
 
 
 
-iter = iter+1;
-
+ 
 end
 
 

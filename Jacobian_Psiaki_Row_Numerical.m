@@ -40,7 +40,7 @@ A(1,7) =(del_ADR_2-del_ADR_1)/0.01;
 
 del_ADR_1 = acculumulated_delta_range_derivative(r, del_R,t_R, v, del_R_rate, pos,lambda, ephemeris, JD_prop_to);
 del_R_rate_pert = del_R_rate+0.01;
-del_ADR_2 = acculumulated_delta_range_derivative(r, del_R,t_R, v_x, del_R_rate_pert, pos,lambda, ephemeris, JD_prop_to);
+del_ADR_2 = acculumulated_delta_range_derivative(r, del_R,t_R, v, del_R_rate_pert, pos,lambda, ephemeris, JD_prop_to);
 A(1,8) =(del_ADR_2-del_ADR_1)/0.01;
 
 

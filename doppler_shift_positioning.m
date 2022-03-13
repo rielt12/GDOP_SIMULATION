@@ -1,6 +1,6 @@
-function [state rec_GDOP, Error, delta_y_0,error_0,A_0] = doppler_shift_positioning(shift, pos, lambda, current_time, ephemeris, JD_prop_to)
+function [state rec_GDOP, Error, delta_y_0,error_0,A_0, del_ADR] = doppler_shift_positioning(shift, pos, lambda, current_time, ephemeris, JD_prop_to)
 
-max_iter = 1500;
+max_iter = 500;
 
 % inputs
 % shifts are observed doppler shifts
@@ -17,13 +17,13 @@ H=0;
 %-4845789.2537157507613301277160645
 %3989288.0202742042019963264465332
 [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),(2*pi)-(longitude*(pi/180)),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  x+100;
-rec_pos(2,1) =  y;
-rec_pos(3,1) =  z;
+rec_pos(1,1) =  x+141e3;
+rec_pos(2,1) =  y+141e3;
+rec_pos(3,1) =  z+141e3;
 %rec_pos(1,1) = 0;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
-rec_clock_bias =0;
+rec_clock_bias =0  ;
 rec_vel = [0;0;0];
 rec_clock_bias_rate= 0;
 
@@ -66,30 +66,45 @@ delta_y_0 =inv((A'*A))*A'*error';
 
 iter = 1;
 Error(iter,1) = norm(error);
-
+Bazooka = 0;
 while(norm(error) >1e-8 && iter < max_iter)
+
 iter  
 norm(error)
 
-%delta_y =pinv((A'*R*A))*A'*R*error';
+delta_y =inv((A'*R*A))*A'*R*error';
 %delta_y = lschol(A'*R*A,A'*R*error');
 %delta_y = (A'*R*A)\A'*R*error';
 %delta_y = lsqr((A'*A),A'*error');
 %delta_y =  inv(A'*A)*A'*error';
-delta_y = pinv(A)*error';
+%delta_y = inv(A)*error';
 
-if(iter > 10)
+if (iter >1)
+if(abs(Error(iter)-Error(iter-1)) < 1e-2)
 %tau = find_step_size(y_i,A,shift, pos, lambda, current_time, ephemeris, JD_prop_to, Error,iter, error,R, delta_y);
-tau  =1;
-else 
-tau  =1;
+tau  =100;
+elseif(iter >100 && Bazooka == 0) 
+tau  =100;
+Bazooka = 1;
+else
+tau = 1;
+end%
 end
 
+if(iter == 1)
+    tau = 1;
+end
 
-%y_i = y_i + tau*delta_y;
+y_i = y_i + tau*delta_y;
 
-y_i(1,1) = y_i(1,1)+tau*delta_y(1,1);
-%y_i(3,1) = y_i(3,1)+tau*delta_y(3,1);
+%y_i(1,1) = y_i(1,1)+tau*delta_y(1,1);
+% y_i(2,1) = y_i(2,1)+tau*delta_y(2,1);
+%  y_i(3,1) = y_i(3,1)+tau*delta_y(3,1);
+%  y_i(4,1) = y_i(4,1)+tau*delta_y(4,1);
+%  y_i(5,1) = y_i(5,1)+tau*delta_y(5,1);
+%  y_i(6,1) = y_i(6,1)+tau*delta_y(6,1);
+%  y_i(7,1) = y_i(7,1)+tau*delta_y(7,1);
+%  y_i(8,1) = y_i(8,1)+tau*delta_y(8,1);
 
 
 
@@ -114,11 +129,20 @@ end
 
 
 for i=1:length(shift)
- A(i,:) = Jacobian_Psiaki_Row_Numerical_c(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
+ A(i,:) = Jacobian_Psiaki_Row_Numerical(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
 end
 
 
-
+% plotting shifts
+figure(400)
+clf
+num=1:9;
+scatter(num,shift,'MarkerFaceColor','blue')
+hold on
+scatter(num,del_ADR,'MarkerFaceColor','red')
+xlabel('satellite number')
+ylabel('ADR Derivatives')
+legend('measured','estimated')
 
 iter = iter+1;
 

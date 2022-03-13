@@ -25,7 +25,7 @@ rec_pos(3,1) =  z;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
 c_rec_clock_bias =0;
-rec_vel = [0;0;0];
+rec_vel = [1;1;1];
 c_rec_clock_bias_rate=0;
 
 y_i = [rec_pos; c_rec_clock_bias; rec_vel; c_rec_clock_bias_rate];
@@ -44,5 +44,8 @@ Error  = 4;
 delta_y_0  = 4;
 error_0 = 4;
 A_0  =4;
+
+
+
 
 end

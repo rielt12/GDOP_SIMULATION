@@ -11,7 +11,7 @@ max_iter = 1500;
 
 %constants
 c= 3e8;
-longitude=77.3790;
+longitude=-77.3790;
 latitude=38.9649; 
 H=0; 
 %1085027.1960869177710264921188354

@@ -1,8 +1,8 @@
 function A  = Jacobian_Psiaki_Row_Numerical(r, del_R,t_R, v, del_R_rate, pos,lambda, ephemeris,JD_prop_to)
 
 A = zeros(1,8);
-h = 1e-2;
-h1 =1e-2;
+h = 2;
+h1 =2;
 
 del_ADR_1 = acculumulated_delta_range_derivative(r, del_R,t_R, v, del_R_rate, pos,lambda, ephemeris, JD_prop_to);
 r_x = r;

@@ -20,10 +20,10 @@ lambda = 3e8/11.325e9; % wavelength starlink
 % example: We are trying to gett the doppler shift at Jun 26, 05:50:05am (local time), 9:50:05 GMT/UTC with
 % the Iridium 70 satellite. At latitude: 38.9649°N and longitude:
 % 77.3790°W 
-longitude=77.3790;
+longitude=-77.3790;
 latitude=38.9649; 
 H=0; 
-location = [latitude,-1*longitude,H];
+location = [latitude,longitude,H];
 
 
 
@@ -89,7 +89,7 @@ for n = 1:length(fNames)
 
     
     % doppler shift calc
-    [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),(2*pi)-(longitude*(pi/180)),H); % this function takes east longitude. change if need be.
+    [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),longitude*(pi/180),H); % this function takes east longitude. change if need be.
     ecef_ref=[x;y;z]; % meters
     eci_ref=ECEFtoECI(JD_prop_to,ecef_ref); % reference (ground station) location in ECI % meters
     eci_ref=transpose(eci_ref); % meters

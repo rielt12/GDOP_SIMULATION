@@ -17,9 +17,9 @@ H=0;
 %-4845789.2537157507613301277160645
 %3989288.0202742042019963264465332
 [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),longitude*(pi/180),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  x+10;
-rec_pos(2,1) =  y+10;
-rec_pos(3,1) =  z;
+rec_pos(1,1) =  0;
+rec_pos(2,1) =  0;
+rec_pos(3,1) =  0;
 %rec_pos(1,1) = 0;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
@@ -29,7 +29,7 @@ rec_clock_bias_rate= 0;
 
 y_i = [rec_pos; rec_clock_bias; rec_vel; rec_clock_bias_rate];
 y_0 =y_i;
-
+vpa(y_0)
 
 t_R =current_time; % minutes
 
@@ -39,7 +39,7 @@ for i=1:length(shift)
     elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
     del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i,:)',lambda,ephemeris(i,1), JD_prop_to);
     R(i,i) = (0.01)^2;
-    error(i)= lambda*(shift(i)-del_ADR(i));
+    error(i,1)= lambda*(shift(i)-del_ADR(i));
 end
 error_0= error';
 
@@ -51,102 +51,102 @@ error_0= error';
 % A_1 = A;
 
 for i=1:length(shift)
-A(i,:) = Jacobian_Psiaki_Row_Numerical(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
+A(i,:) = Jacobian_Psiaki_Row_Numerical_Central_O2(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
 end
 A_0 = A;
+vpa(A_0)
 
-
-delta_y_0 =inv((A'*A))*A'*error';
-
-
-
-
-
-iter = 1;
-nwd = 0;
-Error(iter,1) = 0.5*norm(error)^2;
-while(0.5*norm(error)^2 >1e-9 && iter < max_iter && nwd~=1)
-
-iter  
-0.5*norm(error)^2
-
-%delta_y =inv((A'*R*A))*A'*R*error';
-%delta_y = lschol(A'*R*A,A'*R*error');
-%delta_y = (A'*R*A)\A'*R*error';
-%delta_y = lsqr((A'*A),A'*error');
-%delta_y =  inv(A'*A)*A'*error';
-%delta_y = pinv(A'*A)*A'*error';
-delta_y = inv(A)*error';
+delta_y_0 =inv((A'*A))*A'*error;
 
 
 
- N_g  =100;
 
 
+% iter = 1;
+% nwd = 0;
+% Error(iter,1) = 0.5*norm(error)^2;
+% while(0.5*norm(error)^2 >1e-8 && iter < max_iter && nwd~=1)
+% 
+% iter  
+% 0.5*norm(error)^2
+% 
+% %delta_y =inv((A'*R*A))*A'*R*error';
+% %delta_y = lschol(A'*R*A,A'*R*error');
+% %delta_y = (A'*R*A)\A'*R*error';
+% %delta_y = lsqr((A'*A),A'*error');
+% %delta_y =  inv(A'*A)*A'*error';
+% %delta_y = pinv(A'*A)*A'*error';
+% %delta_y = pinv(A'*A)*A'*error';
+% delta_y = inv(A'*A)*A'*error;
+% 
+% 
+%  N_g  =10;
+% 
+% 
+% 
+% [tau, nwd]  =line_search_doppler(y_i, delta_y, N_g ,shift, pos, lambda,ephemeris,JD_prop_to);
+% %tau = 0.5;
+% 
+% %y_i = y_i +tau*delta_y;
+% %delta_y
+% state_record(iter,:) = y_i;
+% tau
+% 
+% y_i(1,1) = y_i(1,1)+tau*delta_y(1,1);
+% y_i(2,1) = y_i(2,1)+tau*delta_y(2,1);
+% y_i(3,1) = y_i(3,1)+tau*delta_y(3,1);
+% % y_i(4,1) = y_i(4,1)+tau*delta_y(4,1);
+% %  y_i(5,1) = y_i(5,1)+tau*delta_y(5,1);
+% % y_i(6,1) = y_i(6,1)-tau*delta_y(6,1);
+% % y_i(7,1) = y_i(7,1)-tau*delta_y(7,1);
+% %y_i(8,1) = y_i(8,1)+tau*delta_y(8,1);
+% 
+% 
+% 
+% rec_pos =y_i(1:3,1);
+% rec_clock_bias =y_i(4,1);
+% rec_vel =y_i(5:7,1);
+% rec_clock_bias_rate= y_i(8,1);
+% 
+% 
+% t_R =current_time; % minutes
+% 
+% 
+% R  =zeros(length(shift),length(shift));
+% %first compute error terms
+% for i=1:length(shift)
+%     elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
+%     del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i,:)',lambda,ephemeris(i,1), JD_prop_to);
+%     R(i,i) = (0.01)^2;
+%     error(i,1)= lambda*(shift(i)-del_ADR(i));
+% end
+%  Error(iter,1) = 0.5*norm(error)^2;
+% 
+% 
+% 
+% for i=1:length(shift)
+%  A(i,:) = Jacobian_Psiaki_Row_Numerical_Central_O2(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
+% end
+% 
+% 
+% % plotting shifts
+% figure(400)
+% clf
+% num=1:8;
+% scatter(num,shift,'MarkerFaceColor','blue')
+% hold on
+% scatter(num,del_ADR,'MarkerFaceColor','red')
+% xlabel('satellite number')
+% ylabel('ADR Derivatives')
+% legend('measured','estimated')
+% 
+% iter = iter+1;
+% 
+% 
+% 
+% end
 
-%[tau, nwd]  =line_search_doppler(y_i, delta_y, N_g ,shift, pos, lambda,ephemeris,JD_prop_to);
-tau = 1;
-
-%y_i = y_i +tau*delta_y;
-delta_y
-state_record(iter,:) = y_i;
-tau
-
-y_i(1,1) = y_i(1,1)+tau*delta_y(1,1);
-y_i(2,1) = y_i(2,1)-tau*delta_y(2,1)/10;
-% y_i(3,1) = y_i(3,1)-tau*delta_y(3,1);
-% y_i(4,1) = y_i(4,1)+tau*delta_y(4,1);
-%  y_i(5,1) = y_i(5,1)+tau*delta_y(5,1);
-% y_i(6,1) = y_i(6,1)-tau*delta_y(6,1);
-% y_i(7,1) = y_i(7,1)-tau*delta_y(7,1);
-%y_i(8,1) = y_i(8,1)+tau*delta_y(8,1);
-
-
-
-rec_pos =y_i(1:3,1);
-rec_clock_bias =y_i(4,1);
-rec_vel =y_i(5:7,1);
-rec_clock_bias_rate= y_i(8,1);
-
-
-t_R =current_time; % minutes
-
-
-R  =zeros(length(shift),length(shift));
-%first compute error terms
-for i=1:length(shift)
-    elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
-    del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i,:)',lambda,ephemeris(i,1), JD_prop_to);
-    R(i,i) = (0.01)^2;
-    error(i)= lambda*(shift(i)-del_ADR(i));
-end
- Error(iter,1) = 0.5*norm(error)^2;
-
-
-
-for i=1:length(shift)
- A(i,:) = Jacobian_Psiaki_Row_Numerical(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i),lambda,ephemeris(i), JD_prop_to);
-end
-
-
-% plotting shifts
-figure(400)
-clf
-num=1:8;
-scatter(num,shift,'MarkerFaceColor','blue')
-hold on
-scatter(num,del_ADR,'MarkerFaceColor','red')
-xlabel('satellite number')
-ylabel('ADR Derivatives')
-legend('measured','estimated')
-
-iter = iter+1;
-
-
-
-end
-
-
+Error  = 4;
 
 
 rec_GDOP = sqrt(trace(inv(A'*A)));

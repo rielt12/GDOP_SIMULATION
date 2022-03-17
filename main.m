@@ -128,13 +128,12 @@ for n = 1:length(fNames)
     v_j = earth_rot_mat(t_prop)*v_prop_ecef;
     rho_j = (ecef_ref - earth_rot_mat(t_prop)*r_prop_ecef)./norm(ecef_ref - earth_rot_mat(t_prop)*r_prop_ecef);
     alpha_j = dot(-rho_j, cross([0;0;w_e],earth_rot_mat(t_prop)*r_prop_ecef));
-
-    %satrec.(fNames{n}).doppler_shift(t,1)=((dot(rho_j,v_rec-v_j)*((1+del_j_dot)/(1+(1/c)*(alpha_j-dot(rho_j,v_j))))+c*del_r_dot-c*del_j_dot)/(1+del_r_dot))/-lambda;
-    %satrec.(fNames{n}).pos(t,:) = r_ecef'; %meters
-    %satrec.(fNames{n}).vel(t,:) = v_ecef'; % meters
+% 
+%     satrec.(fNames{n}).doppler_shift(t,1)=((dot(rho_j,v_rec-v_j)*((1+del_j_dot)/(1+(1/c)*(alpha_j-dot(rho_j,v_j))))+c*del_r_dot-c*del_j_dot)/(1+del_r_dot))/-lambda;
+%     satrec.(fNames{n}).pos(t,:) = r_ecef'; %meters
+%     satrec.(fNames{n}).vel(t,:) = v_ecef'; % meters
     
-    
-    % equation 10 attempt
+    %equation 10 attempt
     satrec.(fNames{n}).doppler_shift(t,1)= (acculumulated_delta_range_derivative(ecef_ref, del_r,elapsedtime, v_rec, del_r_dot, r_ecef,lambda,satrec.(fNames{n}), JD_prop_to));
     satrec.(fNames{n}).pos(t,:) = r_ecef'; %meters
     satrec.(fNames{n}).vel(t,:) = v_ecef'; % meters

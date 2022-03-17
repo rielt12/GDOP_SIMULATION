@@ -1,12 +1,10 @@
-function A  = Jacobian_Psiaki_Row_Numerical_c(r, cdel_R,t_R, v, cdel_R_rate, pos,lambda, ephemeris,JD_prop_to)
-
-
+function A  = Jacobian_Psiaki_Row_Numerical_Central_O2(r, del_R,t_R, v, del_R_rate, pos,lambda, ephemeris,JD_prop_to)
 c=3e8;
-
-del_R = cdel_R/c;
-del_R_rate = cdel_R_rate/c;
 A = zeros(1,8);
-h =0.2;
+h =1e-5;
+
+
+
 
 r_x = r;
 r_x(1,1) = r(1,1)-h;
@@ -63,7 +61,6 @@ del_ADR_3 = acculumulated_delta_range_derivative(r, del_R_pert,t_R, v, del_R_rat
 del_R_pert = del_R - 2*h;
 del_ADR_4 = acculumulated_delta_range_derivative(r, del_R_pert,t_R, v, del_R_rate, pos,lambda, ephemeris, JD_prop_to);
 A(1,4) =(-del_ADR_3+8*del_ADR_2-8*del_ADR_1+del_ADR_4)/(12*h);
-A(1,4)= A(1,4)/c;
 
 
 v_x = v;
@@ -126,7 +123,7 @@ del_ADR_3 = acculumulated_delta_range_derivative(r, del_R,t_R, v, del_R_rate_per
 del_R_rate_pert = del_R_rate-2*h;
 del_ADR_4 = acculumulated_delta_range_derivative(r, del_R,t_R, v, del_R_rate_pert, pos,lambda, ephemeris, JD_prop_to);
 A(1,8) =(-del_ADR_3+8*del_ADR_2-8*del_ADR_1+del_ADR_4)/(12*h);
-A(1,8) = A(1,8)/c;
+
 
 
 

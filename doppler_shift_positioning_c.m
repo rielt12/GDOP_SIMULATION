@@ -10,25 +10,27 @@ max_iter = 1500;
 
 %constants
 c= 3e8;
-longitude=77.3790;
+longitude=-77.3790;
 latitude=38.9649; 
 H=0; 
 %1085027.1960869177710264921188354
 %-4845789.2537157507613301277160645
 %3989288.0202742042019963264465332
-[x,y,z]=lla2ecef_AB(latitude*(2*pi/360),(2*pi)-(longitude*(pi/180)),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  x+10;
+[x,y,z]=lla2ecef_AB(latitude*(2*pi/360),longitude*(pi/180),H); % this function takes east longitude. change if need be.
+rec_pos(1,1) =  x;
 rec_pos(2,1) =  y;
 rec_pos(3,1) =  z;
 %rec_pos(1,1) = 0;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
-c_rec_clock_bias =0;
-rec_vel = [0;0;0];
-c_rec_clock_bias_rate=0;
+c_rec_clock_bias =c*1e-3;
+rec_vel = [10;10;10];
+c_rec_clock_bias_rate=10;
 
 y_i = [rec_pos; c_rec_clock_bias; rec_vel; c_rec_clock_bias_rate];
 y_0 =y_i;
+
+vpa(y_0)
 
 
 t_R =current_time; % minutes
@@ -67,9 +69,9 @@ delta_y_0 =inv((A'*A))*A'*error';
 iter = 1;
 Error(iter,1) = norm(error);
 
-while(norm(error) >6e-9 && iter < max_iter)
+while(0.5*norm(error)^2 >1e-8 && iter < max_iter)
 iter  
-norm(error)
+0.5*norm(error)^2
 
 delta_y =inv((A'*R*A))*A'*R*error';
 %delta_y = lschol(A'*R*A,A'*R*error');
@@ -82,13 +84,13 @@ delta_y =inv((A'*R*A))*A'*R*error';
 
 
 %tau  = find_step_size(y_i,A,shift, pos, lambda, current_time, ephemeris, JD_prop_to, Error,iter, error,R, delta_y)
-tau = 0.1;
+tau = 1;
 y_i  =y_i + tau*delta_y;
 
 %y_i(1,1) = y_i(1,1)+tau*delta_y(1,1);
-% y_i(2,1) = y_i(2,1)+tau*delta_y(2,1);
+%y_i(2,1) = y_i(2,1)+(tau/10)*delta_y(2,1);
 % y_i(3,1) = y_i(3,1)-tau*delta_y(3,1);
-% y_i(4,1) = y_i(4,1)+tau*delta_y(4,1);
+%y_i(4,1) = y_i(4,1)+tau*delta_y(4,1);
 % y_i(5,1) = y_i(5,1)+tau*delta_y(5,1);
 % y_i(6,1) = y_i(6,1)-tau*delta_y(6,1);
 % y_i(7,1) = y_i(7,1)-tau*delta_y(7,1);
@@ -111,7 +113,7 @@ for i=1:length(shift)
     R(i,i) = (0.01)^2;
     error(i)= lambda*(shift(i)-del_ADR(i));
 end
- Error(iter+1,1) = norm(error);
+ Error(iter+1,1) = 0.5*norm(error)^2;
 
 
 for i=1:length(shift)
@@ -123,7 +125,7 @@ end
 % plotting shifts
 figure(400)
 clf
-num=1:9;
+num=1:8;
 scatter(num,shift,'MarkerFaceColor','blue')
 hold on
 scatter(num,del_ADR,'MarkerFaceColor','red')

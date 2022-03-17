@@ -8,6 +8,7 @@ sat_clock_offset =0;
 t_prop = norm(pos-r)/c; % approximation of propagation time
 A = earth_rot_mat(t_prop);
 
+del_R = cdel_R/c;
 
 
 
@@ -23,4 +24,4 @@ time  =[y,mo,d,h,m,s];
 [r_prop_ecef,~]=eci2ecef(r_prop_eci',v_prop_eci',time(1),time(2),time(3),time(4),time(5),time(6));
   
 
-ADR = sqrt(dot(r-A*r_prop_ecef,r-A*r_prop_ecef))+cdel_R-c*sat_clock_offset+c*(del_trop-del_ion)+lambda*bias_beat; 
+ADR = sqrt(dot(r-A*r_prop_ecef,r-A*r_prop_ecef))+c*del_R-c*sat_clock_offset+c*(del_trop-del_ion)+lambda*bias_beat; 

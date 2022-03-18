@@ -114,7 +114,7 @@ for n = 1:length(fNames)
     % we simulate 0 clock bias rates in the satellites
     del_j_dot = 0; % seconds/second
     % we simulate 0 reciever clock bias
-    del_r = 0; % seconds
+    del_r = 0; % second0s
     % we simulate 0 reciever clock bias rase
     del_r_dot =0; % seconds/second
 

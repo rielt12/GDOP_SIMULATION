@@ -11,7 +11,7 @@ for i=1:length(shift)
     elapsedtime=(JD_prop_to-ephemeris(i).jdsatepoch)*24*60;
     del_ADR(i) = acculumulated_delta_range_derivative(rec_pos, rec_clock_bias,elapsedtime, rec_vel, rec_clock_bias_rate, pos(i,:)',lambda,ephemeris(i,1), JD_prop_to);
     R(i,i) = (0.01)^2;
-    error(i)= lambda*(shift(i)-del_ADR(i));
+    error(i)= lambda*(del_ADR(i)-shift(i));
 end
 
 Kost = error;

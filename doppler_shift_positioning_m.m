@@ -24,7 +24,7 @@ rec_pos(3,1) =  z;
 %rec_pos(1,1) = 0;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
-c_rec_clock_bias =0;
+c_rec_clock_bias =c*101e-3;
 rec_vel = [0;0;0];
 c_rec_clock_bias_rate=0;
 
@@ -47,15 +47,16 @@ vpa(resnorm)
 vpa(0.5*norm(residual)^2)
 %vpa(state)
 
-
+A_0  =jacobian;
+vpa(A_0)
 
 
 rec_GDOP = 4;
 Error  = 4;
 delta_y_0  = 4;
 error_0 = 4;
-A_0  =jacobian;
-vpa(A_0)
+
+
 
 
 rec_pos = y_i(1:3,1);
@@ -68,6 +69,9 @@ for i=1:length(shift)
     R(i,i) = (0.01)^2;
     error(i,1)= lambda*(shift(i)-del_ADR(i));
 end
-error_0= error';
+error
+
+
+inv(A_0)*error
 
 end

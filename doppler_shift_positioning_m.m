@@ -24,7 +24,7 @@ rec_pos(3,1) =  z;
 %rec_pos(1,1) = 0;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
-c_rec_clock_bias =c*101e-3;
+c_rec_clock_bias =0.5;
 rec_vel = [0;0;0];
 c_rec_clock_bias_rate=0;
 
@@ -36,7 +36,7 @@ options = optimoptions('lsqnonlin', 'FunctionTolerance', 1e-30, 'FiniteDifferenc
 options.Algorithm = 'trust-region-reflective';
 options.MaxFunctionEvaluations = 8000;
 options.StepTolerance= 1e-20;
-options.MaxIterations = 1500;
+options.MaxIterations = 100;
 options.OptimalityTolerance = 1e-15;
 
 options
@@ -72,6 +72,6 @@ end
 error
 
 
-inv(A_0)*error
+vpa(inv(A_0)*error)
 
 end

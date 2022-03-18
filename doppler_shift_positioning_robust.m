@@ -1,4 +1,4 @@
-function [state rec_GDOP, Error, delta_y_0,error_0,A_0, del_ADR] = doppler_shift_positioning_robust(shift, pos, lambda, current_time, ephemeris, JD_prop_to)
+function [state rec_GDOP, Error,y_0,delta_y_0,error_0,A_0, del_ADR] = doppler_shift_positioning_robust(shift, pos, lambda, current_time, ephemeris, JD_prop_to)
 
 max_iter = 15e3;
 
@@ -17,17 +17,20 @@ H=0;
 %-4845789.2537157507613301277160645
 %3989288.0202742042019963264465332
 [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),longitude*(pi/180),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  x+100e4;
-rec_pos(2,1) =  y+100e4;
-rec_pos(3,1) =  z+100e4;
+rec_pos(1,1) =  0;
+rec_pos(2,1) =  0;
+rec_pos(3,1) =  0;
 %rec_pos(1,1) = 0;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
-c_rec_clock_bias =1;
-rec_vel = [1;1;1];
-c_rec_clock_bias_rate= 1;
+c_rec_clock_bias =0;
+rec_vel = [0;0;0];
+c_rec_clock_bias_rate= 0;
+
+
 
 y_i = [rec_pos; c_rec_clock_bias; rec_vel; c_rec_clock_bias_rate];
+y_0 = y_i;
 
 R  =zeros(length(shift),length(shift));
 
@@ -74,8 +77,8 @@ delta_y =inv((A'*R*A))*A'*R*error';
 
 
 
-%[tau, nwd]  =line_search_doppler(y_i, delta_y, N_g ,shift, pos, lambda,ephemeris,JD_prop_to);
-tau = 0.5;
+[tau, nwd]  =line_search_doppler(y_i, delta_y, N_g ,shift, pos, lambda,ephemeris,JD_prop_to);
+%tau = 0.5;
 
 
 delta_y(4,1) = delta_y(4,1)/c;

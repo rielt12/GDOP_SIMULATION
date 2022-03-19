@@ -1,4 +1,4 @@
-function A  = Jacobian_Psiaki_Row_Approx(r, del_R,t_R, v, del_R_rate, pos,lambda, ephemeris,JD_prop_to)
+function A  = Jacobian_Psiaki_Row_Approx(r, del_R,t_R, v, del_R_rate, pos, shift,lambda, ephemeris,JD_prop_to)
 
 c=3e8;
 t_prop = norm(pos-r)/c; % approximation of propagation time

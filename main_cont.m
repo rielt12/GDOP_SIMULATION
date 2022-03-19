@@ -81,7 +81,10 @@ pos_0 = ecef2lla([y_0(1,1),y_0(2,1),y_0(3,1)],'WGS84');
 pos_converged = ecef2lla([state(1,1),state(2,1),state(3,1)],'WGS84');
 
 figure(900)
-geoplot([pos_0(1,1);pos_converged(1,1)],[pos_0(1,2);pos_converged(1,2)])
+geoplot([pos_0(1,1);pos_converged(1,1)],[pos_0(1,2);pos_converged(1,2)],'g-*')
+text(pos_0(1,1),pos_0(1,2),'Initial Location');
+text(pos_converged(1,1),pos_converged(1,2),'Converged Location');
+
 
 lla2ned(pos_converged,location,"flat")
 

@@ -13,13 +13,17 @@ c= 3e8;
 longitude=-77.3790;
 latitude=38.9649; 
 H=0; 
+
+% longitude=-135;
+% latitude=90; 
+% H=0; 
 %1085027.1960869177710264921188354
 %-4845789.2537157507613301277160645
 %3989288.0202742042019963264465332
 [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),longitude*(pi/180),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  0;
-rec_pos(2,1) =  0;
-rec_pos(3,1) =  0;
+rec_pos(1,1) =  x+1e6;
+rec_pos(2,1) =  y+1e6;
+rec_pos(3,1) =  z+1e6;
 %rec_pos(1,1) = 0;
 %rec_pos(2,1) = 0;
 %rec_pos(3,1) = 0;
@@ -54,7 +58,6 @@ A_0 = A;
 
 
 
-
 delta_y_0 =inv(A_0)*(error')
 
 
@@ -78,11 +81,11 @@ delta_y =inv((A'*R*A))*A'*R*error';
 
 
 [tau, nwd]  =line_search_doppler(y_i, delta_y, N_g ,shift, pos, lambda,ephemeris,JD_prop_to);
-%tau = 0.5;
+%tau = 0.1;
 
 
 delta_y(4,1) = delta_y(4,1)/c;
-delta_y(8,1) = delta_y(8,1);
+delta_y(8,1) = delta_y(8,1)/c;
 y_i = y_i -tau*delta_y;
 
 %delta_y

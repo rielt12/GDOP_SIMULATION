@@ -19,12 +19,12 @@ H=33;
 %3085865.2224882706068456172943115,
 %3371383.3935853922739624977111816
 [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),longitude*(pi/180),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  x+1000;
-rec_pos(2,1) =  y;
-rec_pos(3,1) =  z;
-%rec_pos(1,1) = 0;
-%rec_pos(2,1) = 0;
-%rec_pos(3,1) = 0;
+% rec_pos(1,1) =  x+1000;
+% rec_pos(2,1) =  y+1000;
+% rec_pos(3,1) =  z+1000;
+rec_pos(1,1) = 0;
+rec_pos(2,1) = 0;
+rec_pos(3,1) = 0;
 c_rec_clock_bias =0;
 rec_vel = [0;0;0];
 c_rec_clock_bias_rate= 0;
@@ -76,8 +76,8 @@ delta_y =inv((A'*R*A))*A'*R*error';
 
 
 N_g  =1000;
-[tau,nwd] = line_search_doppler_gps(y_i, delta_y, N_g ,shift, pos, lambda, current_time, ephemeris,svids);
-%tau = 1e-3;
+%[tau,nwd] = line_search_doppler_gps(y_i, delta_y, N_g ,shift, pos, lambda, current_time, ephemeris,svids);
+tau = 1;
 
 
 delta_y(4,1) = delta_y(4,1)/c; % helps with convergence

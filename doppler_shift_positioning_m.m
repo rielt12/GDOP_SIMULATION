@@ -36,7 +36,7 @@ options = optimoptions('lsqnonlin', 'FunctionTolerance', 1e-30, 'FiniteDifferenc
 options.Algorithm = 'trust-region-reflective';
 options.MaxFunctionEvaluations = 8000;
 options.StepTolerance= 1e-20;
-options.MaxIterations = 100;
+options.MaxIterations = 1e2;
 options.OptimalityTolerance = 1e-15;
 
 options

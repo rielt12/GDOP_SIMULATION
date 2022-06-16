@@ -84,7 +84,7 @@ delta_y =inv((A'*R*A))*A'*R*error';
 %tau = 0.1;
 
 
-delta_y(4,1) = delta_y(4,1)/c;
+delta_y(4,1) = delta_y(4,1)/c; % helps with convergence
 delta_y(8,1) = delta_y(8,1)/c;
 y_i = y_i -tau*delta_y;
 

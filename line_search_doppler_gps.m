@@ -3,8 +3,8 @@ function [gamma,nwd] = line_search_doppler_gps(y_i, delta_y, N_g ,shift, pos, la
 Gamma  = 1;
 prev_cost = compute_cost_doppler_gps(y_i , shift, pos, lambda, current_time, ephemeris, svids);
 prev_cost = 0.5*norm(prev_cost)^2;
-%for j=[N_g:-1:1]
- for j =[1:N_g]
+for j=[N_g:-1:1]
+ %for j =[1:N_g]
 
 Gamma = j/N_g;
 c = 3e8;
@@ -34,7 +34,7 @@ break;
 end
 
 
-if(j==N_g)
+if(j==1)
   display('no way down')
   gamma = 1;  
   nwd = 1;

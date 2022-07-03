@@ -14,8 +14,8 @@ addpath(genpath('GPS_loc_computation'))
 % We collect the relevant shifts
 
 data =xlsread("Test_Data_06_14_2022_14_59_41\raw2.xlsx");
-shift(1:8,1) = data(1:8,5);
-%shift(1:9,1) = data(1:9,5)
+%shift(1:8,1) = data(1:8,5);
+shift(1:9,1) = data(1:9,5);
 
 
 
@@ -34,7 +34,7 @@ svids = [21;
 32
 27
 10
-];
+31];
  
 [nav leapsec cnt] = ReadNav("brdc1650.22n");
 %[nav leapsec cnt] =ReadNav("AMC400USA_R_20221651400_01H_GN.rnx")
@@ -84,8 +84,8 @@ p = get_satpos(T, svids(7),eph,2);
 pos(7,:) = p(1:3,1);
 p = get_satpos(T, svids(8),eph,2);
 pos(8,:) = p(1:3,1);
-% p = get_satpos(UTC_time, svids(9),eph,2);
-% pos(9,:) = p(1:3,1);
+p = get_satpos(UTC_time, svids(9),eph,2);
+pos(9,:) = p(1:3,1);
 
 
 del_t = 0.1;
@@ -105,8 +105,8 @@ v = ((get_satpos(T+del_t, svids(7),eph,2)-get_satpos(T-del_t, svids(7),eph,2))./
 vel(7,:) = v(1,1:3);
 v = ((get_satpos(T+del_t, svids(8),eph,2)-get_satpos(T-del_t, svids(8),eph,2))./(2*del_t))';
 vel(8,:) = v(1,1:3);
-% v = ((get_satpos(T+del_t, svids(9),eph,2)-get_satpos(UTC_time-del_t, svids(9),eph,2))./(2*del_t))';
-% vel(9,:) = v(1,1:3);
+ v = ((get_satpos(T+del_t, svids(9),eph,2)-get_satpos(UTC_time-del_t, svids(9),eph,2))./(2*del_t))';
+ vel(9,:) = v(1,1:3);
 
 
 
@@ -137,7 +137,7 @@ geoplot([pos_true(1,1);pos_true(1,1)],[pos_true(1,2);pos_true(1,2)],'b-*')
 text(pos_true(1,1),pos_true(1,2),'True Location');
 
 
-lla2ned(pos_converged,location,"flat");
+accuracy = (lla2ned(pos_converged,location,"flat"))
 
 figure(1000)
 plot(Error)
@@ -147,7 +147,7 @@ title('error vs. iterations')
 
 figure(700)
 clf
-num=1:8;
+num=1:length(shift);
 scatter(num,shift,'MarkerFaceColor','blue')
 hold on
 scatter(num,del_ADR,'MarkerFaceColor','red')

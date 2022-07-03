@@ -15,7 +15,11 @@ bias = [
 106.06789046277521038064151071012
 107.72690038631384368272847495973
 106.26553490012906877382192760706
- 105.1043247431520626378187444061];
+ 105.1043247431520626378187444061
+ 106.40465396145975773833924904466
+];
+
+m_b = mean(bias);
 
 for i=1:length(shift)
     del_ADR(i) = acculumulated_delta_range_derivative_gps(rec_pos, rec_clock_bias,current_time, rec_vel, rec_clock_bias_rate, pos(i,:)',lambda,ephemeris, svids(i));

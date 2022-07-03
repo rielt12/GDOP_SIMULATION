@@ -55,7 +55,7 @@ vpa(A_0)
 
 
 
-delta_y_0 =inv(A_0)*(error');
+delta_y_0 =inv((A_0'*R*A_0))*A_0'*R*error';
 
 
 
@@ -64,7 +64,7 @@ delta_y_0 =inv(A_0)*(error');
 iter = 1;
 nwd = 0;
 Error(iter,1) = 0.5*norm(error)^2;
-while(0.5*norm(error)^2 >1e-8 && iter < max_iter && nwd~=1)
+while(0.5*norm(error)^2 >1e-11 && iter < max_iter && nwd~=1)
 
 iter  
 0.5*norm(error)^2
@@ -72,12 +72,12 @@ Error(iter,1) = 0.5*norm(error)^2;
 
 delta_y =inv((A'*R*A))*A'*R*error';
 
-%delta_y
+
 
 
 N_g  =1000;
 %[tau,nwd] = line_search_doppler_gps(y_i, delta_y, N_g ,shift, pos, lambda, current_time, ephemeris,svids);
-tau = 1;
+tau = 0.1;
 
 
 delta_y(4,1) = delta_y(4,1)/c; % helps with convergence
@@ -127,7 +127,10 @@ bias = [
 106.06789046277521038064151071012
 107.72690038631384368272847495973
 106.26553490012906877382192760706
- 105.1043247431520626378187444061];
+ 105.1043247431520626378187444061
+106.40465396145975773833924904466
+
+ ];
 for i=1:length(shift)
     del_ADR(i) = acculumulated_delta_range_derivative_gps(rec_pos, c_rec_clock_bias/c,current_time, rec_vel, c_rec_clock_bias_rate/c, pos(i,:)',lambda,ephemeris, svids(i))-bias(i);
 end
@@ -141,7 +144,7 @@ end
 % plotting shifts
 figure(400)
 clf
-num=1:8;
+num=1:length(shift);
 scatter(num,shift,'MarkerFaceColor','blue')
 hold on
 scatter(num,del_ADR,'MarkerFaceColor','red')
@@ -170,7 +173,8 @@ bias = [
 106.06789046277521038064151071012
 107.72690038631384368272847495973
 106.26553490012906877382192760706
- 105.1043247431520626378187444061];
+ 105.1043247431520626378187444061
+ 106.40465396145975773833924904466];
 for i=1:length(shift)
     del_ADR(i) = acculumulated_delta_range_derivative_gps(rec_pos, c_rec_clock_bias/c,current_time, rec_vel, c_rec_clock_bias_rate/c, pos(i,:)',lambda,ephemeris, svids(i))-bias(i);
 end

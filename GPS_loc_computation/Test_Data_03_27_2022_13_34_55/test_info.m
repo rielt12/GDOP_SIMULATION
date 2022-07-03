@@ -79,6 +79,7 @@ lambda=3e8/1.57542003E9;
 
 
 unit_vec_gps = (pos -[x_office;y_office;z_office])./norm(pos -[x_office;y_office;z_office]);
-pseudorange_rate = dot(satvel,unit_vec_gps)
+pseudorange_rate = dot(satvel,unit_vec_gps);
 
-del_ADR = acculumulated_delta_range_derivative_gps(r, del_R,t_R, v, del_R_rate, pos,lambda,eph,svid)
+del_ADR = acculumulated_delta_range_derivative_gps(r, del_R,t_R, v, del_R_rate, pos,lambda,eph,svid);
+vpa(del_ADR)

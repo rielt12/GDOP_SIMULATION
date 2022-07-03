@@ -1,7 +1,7 @@
 function A  = Jacobian_Psiaki_Row_Numerical_Central_O2_gps(r, c_del_R,v, c_del_R_rate, shift, pos, lambda, current_time, ephemeris, svids)
 c=3e8;
 A = zeros(1,8);
-h =0.9;
+h =1;
 
 
 

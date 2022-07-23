@@ -75,34 +75,34 @@ current_time = elapsedtime;
 
 %plot_cost(shift, pos, lambda, current_time, ephemeris, JD_prop_to)
 
-[state ~, Error, y_0 ,delta_y_0,error_0,A_0, del_ADR] = doppler_shift_positioning_robust(shift, pos, lambda, current_time, ephemeris, JD_prop_to);
-vpa(state)
-pos_0 = ecef2lla([y_0(1,1),y_0(2,1),y_0(3,1)],'WGS84');
-pos_converged = ecef2lla([state(1,1),state(2,1),state(3,1)],'WGS84');
-
-figure(900)
-geoplot([pos_0(1,1);pos_converged(1,1)],[pos_0(1,2);pos_converged(1,2)],'g-*')
-text(pos_0(1,1),pos_0(1,2),'Initial Location');
-text(pos_converged(1,1),pos_converged(1,2),'Converged Location');
-
-
-lla2ned(pos_converged,location,"flat")
-
-figure(1000)
-plot(Error)
-xlabel('iterations')
-ylabel('error')
-title('error vs. iterations')
-
-figure(700)
-clf
-num=1:8;
-scatter(num,shift,'MarkerFaceColor','blue')
-hold on
-scatter(num,del_ADR,'MarkerFaceColor','red')
-xlabel('satellite number')
-ylabel('ADR Derivatives')
-legend('measured','estimated')
-
-
-meas_sim_err = norm(del_ADR'-shift);
+ doppler_shift_positioning_robust(shift, pos, lambda, current_time, ephemeris, JD_prop_to);
+% vpa(state)
+% pos_0 = ecef2lla([y_0(1,1),y_0(2,1),y_0(3,1)],'WGS84');
+% pos_converged = ecef2lla([state(1,1),state(2,1),state(3,1)],'WGS84');
+% 
+% figure(900)
+% geoplot([pos_0(1,1);pos_converged(1,1)],[pos_0(1,2);pos_converged(1,2)],'g-*')
+% text(pos_0(1,1),pos_0(1,2),'Initial Location');
+% text(pos_converged(1,1),pos_converged(1,2),'Converged Location');
+% 
+% 
+% lla2ned(pos_converged,location,"flat")
+% 
+% figure(1000)
+% plot(Error)
+% xlabel('iterations')
+% ylabel('error')
+% title('error vs. iterations')
+% 
+% figure(700)
+% clf
+% num=1:8;
+% scatter(num,shift,'MarkerFaceColor','blue')
+% hold on
+% scatter(num,del_ADR,'MarkerFaceColor','red')
+% xlabel('satellite number')
+% ylabel('ADR Derivatives')
+% legend('measured','estimated')
+% 
+% 
+% meas_sim_err = norm(del_ADR'-shift);

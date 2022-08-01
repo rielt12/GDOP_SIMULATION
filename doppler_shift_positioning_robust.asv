@@ -21,15 +21,15 @@ H=0;
 %-4845789.2537157507613301277160645
 %3989288.0202742042019963264465332
 [x,y,z]=lla2ecef_AB(latitude*(2*pi/360),longitude*(pi/180),H); % this function takes east longitude. change if need be.
-rec_pos(1,1) =  x;
-rec_pos(2,1) =  y;
+rec_pos(1,1) =  x+100;
+rec_pos(2,1) =  y+100;
 rec_pos(3,1) =  z;
 % rec_pos(1,1) = 0;
 % rec_pos(2,1) = 0;
 % rec_pos(3,1) = 0;
 c_rec_clock_bias =0;
 rec_vel = [0;0;0];
-c_rec_clock_bias_rate= c*1e-3;
+c_rec_clock_bias_rate= 0;
 
 
 
@@ -63,7 +63,7 @@ vpa(A_0)
 vpa(A_1)
 
 
-delta_y_0 =inv(A_1)*(error');
+delta_y_0 =inv(A_0)*(error');
 
 
 
@@ -78,7 +78,7 @@ iter
 0.5*norm(error)^2
 Error(iter,1) = 0.5*norm(error)^2;
 
-delta_y =inv((A_1'*R*A_1))*A_1'*R*error';
+delta_y =inv((A_0'*R*A_0))*A_0'*R*error';
 
 
  N_g  =1000;

@@ -109,17 +109,18 @@ for n = 1:length(fNames)
     % equation (7) attempt
     % we assume a non stationary reciever 
     v_rec = [0;0;0];
-    % we simulate 0 clock bias in the satellites
+    % we simulate 0 reciever clock bias
+    c_del_r = 0; % second0s
+    % we simulate 0 reciever clock bias rase
+    c_del_r_dot =0; % seconds/second
+
+    
+     % we simulate 0 clock bias in the satellites
     del_j = 0; % seconds
     % we simulate 0 clock bias rates in the satellites
     del_j_dot = 0; % seconds/second
-    % we simulate 0 reciever clock bias
-    del_r = 0; % second0s
-    % we simulate 0 reciever clock bias rase
-    del_r_dot =0; % seconds/second
-
     t_prop = norm(r1_topo_ecef)/c; % approximation (?)
-    [satrec.(fNames{n}), r_prop_eci, v_prop_eci] = sgp4(satrec.(fNames{n}),elapsedtime-del_r/60-t_prop/60);
+    [satrec.(fNames{n}), r_prop_eci, v_prop_eci] = sgp4(satrec.(fNames{n}),elapsedtime-(c_del_r/c)/60-t_prop/60);
     r_prop_eci = r_prop_eci.*1000;
     v_prop_eci = v_prop_eci.*1000; % convert to meters
     
@@ -134,7 +135,7 @@ for n = 1:length(fNames)
 %     satrec.(fNames{n}).vel(t,:) = v_ecef'; % meters
     
     %equation 10 attempt
-    satrec.(fNames{n}).doppler_shift(t,1)= (acculumulated_delta_range_derivative(ecef_ref, del_r,elapsedtime, v_rec, del_r_dot, r_ecef,lambda,satrec.(fNames{n}), JD_prop_to));
+    satrec.(fNames{n}).doppler_shift(t,1)= (acculumulated_delta_range_derivative(ecef_ref, c_del_r,elapsedtime, v_rec, c_del_r_dot, r_ecef,lambda,satrec.(fNames{n}), JD_prop_to));
     satrec.(fNames{n}).pos(t,:) = r_ecef'; %meters
     satrec.(fNames{n}).vel(t,:) = v_ecef'; % meters
 
